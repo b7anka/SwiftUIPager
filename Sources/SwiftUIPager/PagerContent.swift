@@ -145,6 +145,8 @@ extension Pager {
 
         /// Callback for a digital crown rotated event
         var onDigitalCrownRotated: ((Double) -> Void)?
+        
+        let verticalAlignment: VerticalAlignment
 
         /*** State and Binding properties ***/
 
@@ -170,8 +172,9 @@ extension Pager {
         /// - Parameter data: Array of items to populate the content
         /// - Parameter id: KeyPath to identifiable property
         /// - Parameter content: Factory method to build new pages
-        init(size: CGSize, pagerModel: Page, data: [Element], id: KeyPath<Element, ID>, @ViewBuilder content: @escaping (Element) -> PageView) {
+        init(size: CGSize, pagerModel: Page, data: [Element], id: KeyPath<Element, ID>, verticalAlignment: VerticalAlignment, @ViewBuilder content: @escaping (Element) -> PageView) {
             self.size = size
+            self.verticalAlignment = verticalAlignment
             self.pagerModel = pagerModel
             self.data = data.map { PageWrapper(batchId: 1, keyPath: id, element: $0) }
             self.id = \PageWrapper<Element, ID>.id
@@ -179,7 +182,7 @@ extension Pager {
         }
 
         var body: some View {
-            let stack = HStack(spacing: interactiveItemSpacing) {
+            let stack = HStack(alignment: verticalAlignment, spacing: interactiveItemSpacing) {
                 ForEach(dataDisplayed, id: id) { item in
                     Group {
                         if self.isInifinitePager && self.isEdgePage(item) {

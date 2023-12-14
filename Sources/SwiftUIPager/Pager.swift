@@ -172,17 +172,20 @@ public struct Pager<Element, ID, PageView>: View  where PageView: View, Element:
 
     let pagerModel: Page
     
+    let verticalAlignmnet: VerticalAlignment
+    
     /// Initializes a new `Pager`.
     ///
     /// - Parameter page: Current page index
     /// - Parameter data: Collection of items to populate the content
     /// - Parameter id: KeyPath to identifiable property
     /// - Parameter content: Factory method to build new pages
-    public init<Data: RandomAccessCollection>(page: Page, data: Data, id: KeyPath<Element, ID>, @ViewBuilder content: @escaping (Element) -> PageView) where Data.Index == Int, Data.Element == Element {
+    public init<Data: RandomAccessCollection>(page: Page, data: Data, id: KeyPath<Element, ID>, verticalAlignment: VerticalAlignment = .center, @ViewBuilder content: @escaping (Element) -> PageView) where Data.Index == Int, Data.Element == Element {
         self.pagerModel = page
         self.data = Array(data)
         self.id = id
         self.content = content
+        self.verticalAlignmnet = verticalAlignment
         self.pagerModel.totalPages = data.count
     }
 
@@ -198,7 +201,7 @@ public struct Pager<Element, ID, PageView>: View  where PageView: View, Element:
             PagerContent(size: size,
                          pagerModel: pagerModel,
                          data: data,
-                         id: id,
+                         id: id, verticalAlignment: verticalAlignmnet,
                          content: content)
                 .contentLoadingPolicy(contentLoadingPolicy)
                 .loopPages(isInifinitePager, repeating: loopingCount)
@@ -261,8 +264,8 @@ extension Pager where ID == Element.ID, Element : Identifiable {
     /// - Parameter page: Current page index
     /// - Parameter data: Collection of items to populate the content
     /// - Parameter content: Factory method to build new pages
-    public init<Data: RandomAccessCollection>(page: Page, data: Data, @ViewBuilder content: @escaping (Element) -> PageView) where Data.Index == Int, Data.Element == Element {
-        self.init(page: page, data: Array(data), id: \Element.id, content: content)
+    public init<Data: RandomAccessCollection>(page: Page, data: Data, verticalAlignment: VerticalAlignment = .center, @ViewBuilder content: @escaping (Element) -> PageView) where Data.Index == Int, Data.Element == Element {
+        self.init(page: page, data: Array(data), id: \Element.id, verticalAlignment: verticalAlignment, content: content)
     }
 
 }
