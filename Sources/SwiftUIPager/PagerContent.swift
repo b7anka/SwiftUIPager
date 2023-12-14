@@ -196,7 +196,7 @@ extension Pager {
                                 .rotation3DEffect(self.angle(for: item),
                                                   axis:  self.axis)
                                 .opacity(opacity(for: item))
-                                
+                                .offset(x: self.xOffset)
                         }
                     }
                 }
